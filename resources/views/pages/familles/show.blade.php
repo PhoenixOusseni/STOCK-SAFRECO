@@ -3,11 +3,11 @@
     <div class="pagetitle">
         <div class="d-flex justify-content-between align-items-center">
             <div class="mx-0">
-                <h1>Gestion des familles</h1>
+                <h1>Gestion des groupes d'immobilisation</h1>
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Gestion des familles</li>
+                        <li class="breadcrumb-item active">Gestion des groupes d'immobilisation</li>
                     </ol>
                 </nav>
             </div>
@@ -32,14 +32,14 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Détails de la famille</h5>
+                        <h5 class="card-title">Détails du groupe d'immobilisation</h5>
                         <table class="table table-bordered">
                             <tr>
-                                <th>Code de la famille</th>
+                                <th>Code du groupe</th>
                                 <td>{{ $findFamille->code }}</td>
                             </tr>
                             <tr>
-                                <th>Nom de la famille</th>
+                                <th>Nom du groupe</th>
                                 <td>{{ $findFamille->designation }}</td>
                             </tr>
                             <tr>
@@ -59,16 +59,16 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Actifs de la famille {{ $findFamille->designation }}</h5>
+                        <h5 class="card-title">Actifs du groupe "{{ $findFamille->designation }}"</h5>
                         <!-- Table with stripped rows -->
                         <table class="table table-striped datatable">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th>Code actif</th>
-                                    <th scope="col">Nom de l'actif</th>
-                                    <th scope="col">Valeur d'achat</th>
-                                    <th scope="col">Date d'acquisition</th>
+                                    <th>Code immo</th>
+                                    <th scope="col">Nom immo</th>
+                                    <th scope="col">Val acquisition</th>
+                                    <th scope="col">Date acquisition</th>
                                     <th>Statut</th>
                                     <th scope="col">Actions</th>
                                 </tr>
@@ -79,7 +79,7 @@
                                         <th scope="row">{{ $article->id }}</th>
                                         <td>{{ $article->code }}</td>
                                         <td>{{ $article->designation }}</td>
-                                        <td>{{ number_format($article->prix_achat, 2, ',', ' ') }} FCFA</td>
+                                        <td>{{ number_format($article->prix_achat, 0, ',', ' ') }}</td>
                                         <td>{{ $article->date_entree }}</td>
                                         <td>{{ $article->statut }}</td>
                                         <td class="text-center">
@@ -114,14 +114,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
+                    <p id="articleName" class="text-muted mb-0"></p>
                     <div class="bg-white p-3 rounded">
                         <svg id="barcodeDisplay"></svg>
                     </div>
                     <p class="mt-3 mb-0">
                         <strong id="barcodeText"></strong>
                     </p>
-                    <p id="articleName" class="text-muted mb-0"></p>
-                    <p id="articlePrice" class="fw-bold mb-0"></p>
                 </div>
                 <hr>
                 <div class="mx-3 mb-3 mt-5">
@@ -145,18 +144,15 @@
     <script>
         let currentBarcode = '';
         let currentArticleName = '';
-        let currentArticlePrice = '';
 
         // Fonction pour afficher le code-barres dans la modale
-        function showBarcode(barcode, articleName, articlePrice) {
+        function showBarcode(barcode, articleName) {
             currentBarcode = barcode;
             currentArticleName = articleName;
-            currentArticlePrice = articlePrice;
 
             // Afficher les informations
             document.getElementById('barcodeText').textContent = barcode;
             document.getElementById('articleName').textContent = articleName;
-            document.getElementById('articlePrice').textContent = articlePrice + ' FCFA';
 
             // Générer le code-barres
             JsBarcode("#barcodeDisplay", barcode, {
@@ -204,11 +200,10 @@
                     </style>
                 </head>
                 <body>
+                    <p><strong>Prix: ${currentArticlePrice} FCFA</strong></p>
                     ${barcodeContent}
                     <div class="info">
                         <h3>${currentBarcode}</h3>
-                        <p>${currentArticleName}</p>
-                        <p><strong>Prix: ${currentArticlePrice} FCFA</strong></p>
                     </div>
                     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script>
                     <script>

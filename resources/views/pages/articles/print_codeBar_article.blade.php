@@ -176,9 +176,9 @@
 
     <!-- En-tête (caché à l'impression) -->
     <div class="print-header">
-        <h1>📦 CODES-BARRES DES ARTICLES</h1>
+        <h1>📦 CODES-BARRES DES IMMOBILISATIONS</h1>
         <p>Document généré le {{ date('d/m/Y à H:i') }}</p>
-        <p><strong>Total:</strong> {{ count($articles) }} article(s)</p>
+        <p><strong>Total:</strong> {{ count($articles) }} immobilisation(s)</p>
     </div>
 
     @if (count($articles) > 0)
@@ -189,27 +189,17 @@
                     <div class="barcode-label">
                         <div class="article-name">{{ Str::limit($article->designation, 50) }}</div>
 
-                        <div class="mb-0 text-center">
-                            <img src="{{ asset('images/images.jpg') }}" alt="logo safreco" style="width: 125px;">
-                        </div>
-
                         <svg class="barcode" data-code="{{ $article->code_barre }}">
                         </svg>
 
                         <div class="barcode-text">{{ $article->code_barre }}</div>
-
-                        @if ($article->prix_vente)
-                            <div class="price">
-                                {{ number_format($article->prix_vente, 0, ',', ' ') }} FCFA
-                            </div>
-                        @endif
                     </div>
                 @endif
             @endforeach
         </div>
     @else
         <div class="no-data">
-            <p>❌ Aucun article avec code-barres disponible</p>
+            <p>❌ AucunE immobilisation avec code-barres disponible</p>
         </div>
     @endif
 

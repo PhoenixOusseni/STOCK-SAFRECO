@@ -20,6 +20,8 @@ class ArticleSeeder extends Seeder
                 'reference' => 'Ar001',
                 'prix_achat' => 110000.00,
                 'prix_vente' => 150000.00,
+                'date_entree' => '2024-01-01',
+                'date_service' => '2024-01-02',
                 'stock' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -30,6 +32,8 @@ class ArticleSeeder extends Seeder
                 'reference' => 'Ar002',
                 'prix_achat' => 200000.00,
                 'prix_vente' => 300000.00,
+                'date_entree' => '2024-02-01',
+                'date_service' => '2024-02-02',
                 'stock' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -41,6 +45,8 @@ class ArticleSeeder extends Seeder
                 'reference' => 'Ar003',
                 'prix_achat' => 250000.00,
                 'prix_vente' => 400000.00,
+                'date_entree' => '2024-03-01',
+                'date_service' => '2024-03-02',
                 'stock' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -51,11 +57,12 @@ class ArticleSeeder extends Seeder
                 'reference' => 'Ar004',
                 'prix_achat' => 300000.00,
                 'prix_vente' => 450000.00,
+                'date_entree' => '2024-04-01',
+                'date_service' => '2024-04-02',
                 'stock' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // Ajoutez plus d'articles si nécessaire
         ]);
     }
 }

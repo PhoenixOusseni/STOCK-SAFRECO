@@ -62,11 +62,11 @@
     <div class="pagetitle no-print">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h1>Codes-barres des articles</h1>
+                <h1>Codes-barres des immobilisations</h1>
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('gestions_articles.index') }}">Articles</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('gestions_articles.index') }}">Immobilisations</a></li>
                         <li class="breadcrumb-item active">Codes-barres</li>
                     </ol>
                 </nav>
@@ -89,7 +89,7 @@
                     <div class="card-body">
                         <h5 class="card-title no-print">
                             Liste des codes-barres
-                            <span class="badge bg-primary">{{ count($articles) }} article(s)</span>
+                            <span class="badge bg-primary">{{ count($articles) }} immobilisation(s)</span>
                         </h5>
 
                         @if (count($articles) > 0)
@@ -98,13 +98,9 @@
                                     @if ($article->code_barre)
                                         <div class="barcode-item">
                                             <h6>{{ $article->designation }}</h6>
-                                            <div class="mb-0 text-center">
-                                                <img src="{{ asset('images/images.jpg') }}" alt="logo safreco" style="width: 125px;">
-                                            </div>
                                             <svg class="barcode" data-code="{{ $article->code_barre }}"
                                                 data-designation="{{ $article->designation }}">
                                             </svg>
-                                            <h3 class="code-text text-success mb-2">Prix: {{ number_format($article->prix_vente, 0, ',', ' ') }} FCFA</h3>
                                         </div>
                                     @endif
                                 @endforeach
@@ -112,7 +108,7 @@
                         @else
                             <div class="alert alert-info">
                                 <i class="bi bi-info-circle"></i>
-                                Aucun article avec code-barres trouvé.
+                                Aucune immobilisation avec code-barres trouvée.
                             </div>
                         @endif
                     </div>

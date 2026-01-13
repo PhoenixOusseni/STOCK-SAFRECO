@@ -39,6 +39,7 @@ class ArticleController extends Controller
         $article->prix_achat = $request->prix_achat;
         $article->prix_vente = $request->prix_vente;
         $article->date_entree = $request->date_entree;
+        $article->date_service = $request->date_service;
         $article->famille_id = $request->famille_id;
         $article->statut = $request->statut;
 
@@ -77,13 +78,15 @@ class ArticleController extends Controller
     {
         // Récupération de l'article à mettre à jour
         $article = Article::findOrFail($id);
-        
+
         // Mise à jour des champs
         $article->designation = $request->designation;
         $article->reference = $request->reference;
         $article->prix_achat = $request->prix_achat;
         $article->prix_vente = $request->prix_vente;
         $article->date_entree = $request->date_entree;
+        $article->date_service = $request->date_service;
+
         $article->famille_id = $request->famille_id;
         $article->statut = $request->statut;
 
@@ -220,7 +223,7 @@ class ArticleController extends Controller
      */
     public function template()
     {
-        $headers = ['Désignation', 'Référence', 'Prix Achat', 'Prix Vente', 'Seuil'];
+        $headers = ['code_barre', 'Désignation', 'date_entree', 'date_service', 'Référence', 'Prix Achat', 'Prix Vente', 'code_Famille', 'libelle_Famille'];
         $filename = 'template_articles.csv';
 
         return response()->streamDownload(function() use ($headers) {

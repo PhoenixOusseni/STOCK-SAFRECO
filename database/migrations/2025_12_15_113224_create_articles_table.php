@@ -19,6 +19,8 @@ return new class extends Migration
             $table->decimal('prix_achat', 10, 2);
             $table->decimal('prix_vente', 10, 2);
             $table->date('date_entree')->nullable();
+            $table->date('date_service')->nullable();
+
             $table->string('statut')->nullable(); // amortissable, non amortissable
 
             $table->foreignId('famille_id')->nullable()->constrained('familles')->onDelete('cascade')->onUpdate('cascade');

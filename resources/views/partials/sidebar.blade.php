@@ -82,7 +82,7 @@
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{ route('gestions_familles.index') }}">
                 <i class="bi bi-collection"></i>
-                <span>Famille</span>
+                <span>Groupe immobilisation</span>
             </a>
         </li><!-- End Family Nav -->
         <li class="nav-item">
@@ -100,7 +100,7 @@
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{ route('gestions_articles.index') }}">
                 <i class="bi bi-bag"></i>
-                <span>Articles</span>
+                <span>Immobilisation</span>
             </a>
         </li><!-- End Login Page Nav -->
         <li class="nav-item">

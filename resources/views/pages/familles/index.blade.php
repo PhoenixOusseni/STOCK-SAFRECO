@@ -3,16 +3,16 @@
     <div class="pagetitle">
         <div class="d-flex justify-content-between align-items-center">
             <div class="mx-0">
-                <h1>Gestion des familles</h1>
+                <h1>Gestion des groupes d'immobilisation</h1>
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Gestion des familles</li>
+                        <li class="breadcrumb-item active">Gestion des groupes d'immobilisation</li>
                     </ol>
                 </nav>
             </div>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFamilyModal">
-                <i class="bi bi-plus-circle"></i>&nbsp; Ajouter une famille
+                <i class="bi bi-plus-circle"></i>&nbsp; Ajouter un groupe d'immobilisation
             </button>
 
             <!-- Modal -->
@@ -21,14 +21,14 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addFamilyModalLabel">Ajouter une nouvelle famille</h5>
+                            <h5 class="modal-title" id="addFamilyModalLabel">Ajouter un nouveau groupe d'immobilisation</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form action="{{ route('gestions_familles.store') }}" method="POST">
                             @csrf
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="designation" class="form-label">Nom de la famille</label>
+                                    <label for="designation" class="form-label">Nom du groupe d'immobilisation</label>
                                     <input type="text" class="form-control" id="designation" name="designation" required>
                                 </div>
                                 <div class="mb-3">
@@ -56,14 +56,14 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Liste des familles</h5>
+                        <h5 class="card-title">Liste des groupes d'immobilisation</h5>
                         <!-- Table with stripped rows -->
                         <table class="table table-striped datatable">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th>Code famille</th>
-                                    <th scope="col">Nom de la famille</th>
+                                    <th>Code groupe</th>
+                                    <th scope="col">Nom du groupe</th>
                                     <th scope="col">Taux d'amortissement</th>
                                     <th>Nombre d'actifs</th>
                                     <th scope="col">Actions</th>

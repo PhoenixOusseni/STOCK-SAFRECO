@@ -1,4 +1,5 @@
 @extends('layouts.master')
+
 @section('content')
     <div class="pagetitle">
         <div class="d-flex justify-content-between align-items-center">
@@ -12,7 +13,7 @@
                 </nav>
             </div>
             <a href="{{ route('gestions_articles.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i>&nbsp; Ajouter un article
+                <i class="bi bi-plus-circle"></i>&nbsp; Ajouter une nouvelle immobilisation
             </a>
         </div>
     </div><!-- End Page Title -->
@@ -22,17 +23,17 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Liste des articles</h5>
+                        <h5 class="card-title">Liste des immobilisations</h5>
                         <!-- Table with stripped rows -->
                         <table class="table table-striped datatable">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom de l'article</th>
+                                    <th scope="col">Code</th>
+                                    <th scope="col">Nom immo</th>
                                     <th scope="col">Référence</th>
-                                    <th scope="col">Code-barres</th>
-                                    <th scope="col">Prix d'Achat</th>
-                                    <th scope="col">Prix de Vente</th>
+                                    <th scope="col">CB</th>
+                                    <th scope="col">Val acquisition</th>
+                                    <th scope="col">Val residuelle</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -49,8 +50,8 @@
                                                 <span class="badge bg-secondary">Non généré</span>
                                             @endif
                                         </td>
-                                        <td>{{ number_format($article->prix_achat, 2, ',', ' ') }} FCFA</td>
-                                        <td>{{ number_format($article->prix_vente, 2, ',', ' ') }} FCFA</td>
+                                        <td>{{ number_format($article->prix_achat, 0, ',', ' ') }}</td>
+                                        <td>{{ number_format($article->prix_vente, 0, ',', ' ') }}</td>
                                         <td class="text-center">
                                             @if ($article->code_barre)
                                                 <button type="button" class="btn btn-sm btn-warning"
@@ -80,18 +81,17 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Code-barres de l'article</h5>
+                    <h5 class="modal-title">Code-barres de l'immobilisation</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
+                    <p id="articleName" class="text-muted mb-0"></p>
                     <div class="bg-white p-3 rounded">
                         <svg id="barcodeDisplay"></svg>
                     </div>
                     <p class="mt-3 mb-0">
                         <strong id="barcodeText"></strong>
                     </p>
-                    <p id="articleName" class="text-muted mb-0"></p>
-                    <p id="articlePrice" class="fw-bold mb-0"></p>
                 </div>
                 <hr>
                 <div class="mx-3 mb-3 mt-5">
@@ -115,18 +115,15 @@
     <script>
         let currentBarcode = '';
         let currentArticleName = '';
-        let currentArticlePrice = '';
 
         // Fonction pour afficher le code-barres dans la modale
-        function showBarcode(barcode, articleName, articlePrice) {
+        function showBarcode(barcode, articleName) {
             currentBarcode = barcode;
             currentArticleName = articleName;
-            currentArticlePrice = articlePrice;
 
             // Afficher les informations
             document.getElementById('barcodeText').textContent = barcode;
             document.getElementById('articleName').textContent = articleName;
-            document.getElementById('articlePrice').textContent = articlePrice + ' FCFA';
 
             // Générer le code-barres
             JsBarcode("#barcodeDisplay", barcode, {
@@ -174,11 +171,10 @@
                     </style>
                 </head>
                 <body>
+                    <p>${currentArticleName}</p>
                     ${barcodeContent}
                     <div class="info">
                         <h3>${currentBarcode}</h3>
-                        <p>${currentArticleName}</p>
-                        <p><strong>Prix: ${currentArticlePrice} FCFA</strong></p>
                     </div>
                     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script>
                     <script>

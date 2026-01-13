@@ -8,7 +8,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('gestions_banques.store') }}" method="POST">
+            <form action="" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -74,7 +74,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('gestions_caisses.store') }}" method="POST">
+            <form action="" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
