@@ -126,6 +126,9 @@ Route::middleware('auth')->group(function () {
 
     // gestion des familles d'articles
     Route::resource('familles/gestions_familles', App\Http\Controllers\FamilleController::class);
+    // Import des familles d'articles
+    Route::post('familles/import', [App\Http\Controllers\FamilleController::class, 'import'])->name('familles.import');
+    Route::get('familles/template', [App\Http\Controllers\FamilleController::class, 'template'])->name('familles.template');
 
     // Taux d'amortissement fiscal
     Route::get('amortissements/taux_amortissement', [PageController::class, 'tauxAmortissement'])->name('amortissements.taux_amortissement');

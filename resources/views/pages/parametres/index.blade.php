@@ -168,15 +168,14 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <i class="bi bi-download"></i> Importer les Articles
+                            <i class="bi bi-download"></i> Importer des immobilisations
                         </h5>
-                        <p class="text-muted">Importez les articles depuis un fichier CSV/Excel</p>
+                        <p class="text-muted">Importez les immobilisations depuis un fichier CSV/Excel</p>
 
                         <form action="{{ route('articles.import') }}" method="POST" enctype="multipart/form-data">
                             @csrf
-
                             <div class="mb-3">
-                                <label for="articles_file" class="form-label">Fichier Articles</label>
+                                <label for="articles_file" class="form-label">Fichier Immobilisations</label>
                                 <input type="file" class="form-control" id="articles_file" name="file"
                                     accept=".csv,.xlsx,.xls" required>
                                 <small class="text-muted">Formats acceptés: CSV, XLSX</small>
@@ -215,6 +214,39 @@
                                     </button>
                                 </div>
                                 <small class="text-muted d-block mt-1">Template: Article ID, Dépôt ID, Quantité</small>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-boxes"></i> Importer groupe Immobilisation
+                        </h5>
+                        <div class="mb-3">
+                            <label class="form-label">Importer groupes d'immobilisation</label>
+                            <p class="text-muted">Initialisez les groupes d'immobilisation</p>
+                            <form action="{{ route('familles.import') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="familles_file" class="form-label">Fichier Familles</label>
+                                    <input type="file" class="form-control" id="familles_file" name="file"
+                                        accept=".csv,.xlsx,.xls" required>
+                                    <small class="text-muted">Formats acceptés: CSV, XLSX</small>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-success flex-grow-1">
+                                        <i class="bi bi-upload"></i> Importer
+                                    </button>
+                                    <a href="{{ route('familles.template') }}"
+                                        class="btn btn-outline-secondary flex-grow-1">
+                                        <i class="bi bi-file-earmark-spreadsheet"></i> Template
+                                    </a>
+                                </div>
                             </form>
                         </div>
                     </div>

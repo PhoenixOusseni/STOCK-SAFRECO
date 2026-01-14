@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Famille;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -137,12 +138,9 @@ class ArticleController extends Controller
             $imported = 0;
             $errors = [];
 
-            // Obtenir le dernier ID pour la génération des codes
-            $lastId = Article::max('id') ?? 0;
-
             // Parcourir chaque ligne du fichier
             while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
-                // Ignorer les lignes complètement vides (toutes les colonnes vides)
+                // Ignorer les lignes complètement vides
                 $hasData = false;
                 foreach ($row as $cell) {
                     if (!empty(trim($cell))) {
@@ -156,46 +154,45 @@ class ArticleController extends Controller
                 }
 
                 try {
+                    DB::beginTransaction();
+
                     // Mapper les colonnes du CSV
-                    // Format attendu: Type, Raison Sociale, Nom, Adresse, Téléphone, Email, Ville
-                    $designation = trim($row[0] ?? '');
-                    $reference = trim($row[1] ?? '');
-                    $prix_achat = floatval(str_replace(',', '.', trim($row[2] ?? '0')));
-                    $prix_vente = floatval(str_replace(',', '.', trim($row[3] ?? '0')));
+                    // Format: code_barre, designation, date_entree, date_service, prix_achat, prix_vente, code_famille, libelle_famille
+                    $designation = trim($row[1] ?? '');
+                    $date_entree = trim($row[2] ?? date('Y-m-d'));
+                    $date_service = trim($row[3] ?? date('Y-m-d'));
+                    $prix_achat = floatval(trim($row[4] ?? 0));
+                    $prix_vente = floatval(trim($row[5] ?? 0));
+                    // $code_famille = trim($row[6] ?? '');
 
-                    // Debug: Log des données lues (à retirer en production)
-                    \Log::info('Import ligne', [
-                        'row' => $row,
+                    // Trouver la famille par code
+                    // $famille = Famille::where('code', $code_famille)->first();
+                    // if (!$famille) {
+                    //     throw new \Exception("Famille avec le code '{$code_famille}' non trouvée");
+                    // }
+
+                    // Générer le numéro d'article unique
+                    $lastArticle = Article::latest('id')->first();
+                    $nextNumber = $lastArticle ? intval(substr($lastArticle->numero_article, 4)) + 1 : 1;
+                    $numeroArticle = 'ART-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+
+                    // Créer l'article
+                    $article = Article::create([
+                        'code' => $numeroArticle,
+                        'code_barre' => $code_barre,
                         'designation' => $designation,
-                        'reference' => $reference,
+                        'date_entree' => $this->convertDate($date_entree),
+                        'date_service' => $this->convertDate($date_service),
                         'prix_achat' => $prix_achat,
                         'prix_vente' => $prix_vente,
+                        'famille_id' => $famille->id,
                     ]);
 
-                    // Générer un code automatique unique
-                    $lastId++;
-                    $code = 'ART-' . str_pad($lastId, 5, '0', STR_PAD_LEFT);
-
-                    // Vérifier si le code existe déjà (sécurité)
-                    while (Article::where('code', $code)->exists()) {
-                        $lastId++;
-                        $code = 'ART-' . str_pad($lastId, 5, '0', STR_PAD_LEFT);
-                    }
-
-                    // Créer un nouveau article
-                    Article::create([
-                        'code' => $code,
-                        'code_barre' => Article::generateCodeBarre(),
-                        'designation' => $designation,
-                        'reference' => $reference,
-                        'prix_achat' => $prix_achat,
-                        'prix_vente' => $prix_vente,
-                        'seuil' => 10, // Seuil par défaut
-                    ]);
-
+                    DB::commit();
                     $imported++;
 
                 } catch (\Exception $e) {
+                    DB::rollBack();
                     $errors[] = "Ligne " . ($imported + 2) . ": " . $e->getMessage() . " | Données: " . implode(' | ', $row);
                 }
             }
@@ -203,11 +200,10 @@ class ArticleController extends Controller
             fclose($handle);
 
             // Message de succès avec détails
-            $message = "$imported article(s) importé(s) avec succès.";
+            $message = "$imported immobilisation(s) importée(s) avec succès.";
 
             if (!empty($errors)) {
                 $message .= " " . count($errors) . " erreur(s) détectée(s).";
-                // Afficher les erreurs dans la session
                 session()->flash('errors_detail', $errors);
             }
 
@@ -223,12 +219,12 @@ class ArticleController extends Controller
      */
     public function template()
     {
-        $headers = ['code_barre', 'Désignation', 'date_entree', 'date_service', 'Référence', 'Prix Achat', 'Prix Vente', 'code_Famille', 'libelle_Famille'];
+        $headers = ['Référence immobilisation', 'Désignation', 'Date d\'acquisition', 'Date de mise en service', 'Valeur d\'acquisition', 'Valeur résiduelle', '', 'Groupe immobilisation', 'Libellé groupe immobilisation'];
         $filename = 'template_articles.csv';
 
         return response()->streamDownload(function() use ($headers) {
             $handle = fopen('php://output', 'w');
-            fputcsv($handle, $headers);
+            fputcsv($handle, $headers, ';');
             fclose($handle);
         }, $filename);
     }
@@ -246,8 +242,7 @@ class ArticleController extends Controller
                   ->orWhere('code_barre', 'like', "%{$search}%")
                   ->orWhere('reference', 'like', "%{$search}%");
         })
-        ->limit(20)
-        ->get()
+        ->limit(20)->get()
         ->map(function($article) {
             return [
                 'id' => $article->id,
