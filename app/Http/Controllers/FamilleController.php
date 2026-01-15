@@ -25,6 +25,7 @@ class FamilleController extends Controller
         $famille = new Famille();
         $code = 'FAM-' . str_pad(Famille::max('id') + 1, 5, '0', STR_PAD_LEFT);
         $famille->code = $code;
+        $famille->code_comptable = $code_comptable;
         $famille->designation = $request->designation;
         $famille->taux_amortissement = $request->taux_amortissement;
 
@@ -36,7 +37,7 @@ class FamilleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(String $id)
+    public function show(string $id)
     {
         $findFamille = Famille::find($id);
         return view('pages.familles.show', compact('findFamille'));
@@ -62,6 +63,11 @@ class FamilleController extends Controller
     public function import(Request $request)
     {
         try {
+            // Validation du fichier
+            $request->validate([
+                'file' => 'required|file|mimes:csv,txt|max:2048',
+            ]);
+
             $file = $request->file('file');
 
             // Ouvrir le fichier CSV
@@ -102,23 +108,25 @@ class FamilleController extends Controller
 
                 try {
                     // Mapper les colonnes du CSV
-                    // Format attendu: code, designation, taux_amortissement
-                    $code = trim($row[0] ?? '');
-                    $designation = trim($row[1] ?? '');
-                    $taux_amortissement = trim($row[2] ?? '');
+                    // Format attendu: designation,taux_amortissement
+                    $designation = isset($row[0]) ? trim($row[0]) : null;
+                    $taux_amortissement = isset($row[2]) ? floatval(trim($row[2])) : 0;
 
                     // Debug: Log des données lues (à retirer en production)
                     \Log::info('Import ligne', [
                         'row' => $row,
-                        'code' => $code,
                         'designation' => $designation,
                         'taux_amortissement' => $taux_amortissement,
                     ]);
 
+                    // Générer un code automatique unique
+                    $lastId++;
+                    $code = 'FAM-' . str_pad($lastId, 5, '0', STR_PAD_LEFT);
+
                     // Vérifier si le code existe déjà (sécurité)
                     while (Famille::where('code', $code)->exists()) {
                         $lastId++;
-                        $code = str_pad($lastId, 5, '0', STR_PAD_LEFT);
+                        $code = 'FAM-' . str_pad($lastId, 5, '0', STR_PAD_LEFT);
                     }
 
                     // Créer un nouveau fournisseur
@@ -129,27 +137,27 @@ class FamilleController extends Controller
                     ]);
 
                     $imported++;
-
                 } catch (\Exception $e) {
-                    $errors[] = "Ligne " . ($imported + 2) . ": " . $e->getMessage() . " | Données: " . implode(' | ', $row);
+                    $errors[] = 'Ligne ' . ($imported + 2) . ': ' . $e->getMessage() . ' | Données: ' . implode(' | ', $row);
                 }
             }
 
             fclose($handle);
 
             // Message de succès avec détails
-            $message = "$imported groupe(s) immobilisation(s) importé(s) avec succès.";
+            $message = "$imported famille(s) importée(s) avec succès.";
 
             if (!empty($errors)) {
-                $message .= " " . count($errors) . " erreur(s) détectée(s).";
+                $message .= ' ' . count($errors) . ' erreur(s) détectée(s).';
                 // Afficher les erreurs dans la session
                 session()->flash('errors_detail', $errors);
             }
 
             return redirect()->back()->with('success', $message);
-
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Erreur lors de l\'import: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Erreur lors de l\'import: ' . $e->getMessage());
         }
     }
 
@@ -159,7 +167,7 @@ class FamilleController extends Controller
         $headers = ['code', 'designation', 'taux_amortissement'];
         $filename = 'template_familles.csv';
 
-        return response()->streamDownload(function() use ($headers) {
+        return response()->streamDownload(function () use ($headers) {
             $handle = fopen('php://output', 'w');
             fputcsv($handle, $headers);
             fclose($handle);

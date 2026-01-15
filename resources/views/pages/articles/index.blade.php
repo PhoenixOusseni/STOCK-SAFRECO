@@ -4,11 +4,11 @@
     <div class="pagetitle">
         <div class="d-flex justify-content-between align-items-center">
             <div class="mx-0">
-                <h1>Gestion des articles</h1>
+                <h1>Gestion des immobilisations</h1>
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Gestion des articles</li>
+                        <li class="breadcrumb-item active">Gestion des immobilisations</li>
                     </ol>
                 </nav>
             </div>

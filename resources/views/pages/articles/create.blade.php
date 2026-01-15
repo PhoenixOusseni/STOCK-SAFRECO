@@ -47,7 +47,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 mb-3">
-                                    <label for="code" class="small">Code</label>
+                                    <label for="code" class="small">Compte</label>
                                     <input type="text" class="form-control" id="code" name="code" required>
                                 </div>
                                 <div class="col-md-3 mb-3">

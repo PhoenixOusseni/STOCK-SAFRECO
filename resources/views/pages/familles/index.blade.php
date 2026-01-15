@@ -62,7 +62,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th>Code groupe</th>
+                                    <th>Code</th>
                                     <th scope="col">Nom du groupe</th>
                                     <th scope="col">Taux d'amortissement</th>
                                     <th>Nombre d'actifs</th>
